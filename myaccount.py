@@ -3,6 +3,7 @@
 from flask import Flask, request, render_template
 import requests
 import mysql.connector
+from db_manager import DatabaseManager
 app = Flask(__name__)
 
 @app.route('/myaccount', methods=['GET'])
@@ -53,40 +54,9 @@ def handle_wechat_redirect():
 
     # 在这里，你可以使用获取到的 access_token 和 openid 实现用户的登录
     # 例如，你可以从数据库中获取用户的数据
-    usage_records = get_usage_records(openid)
+    usage_records = DatabaseManager().get_usage_records(openid)
+    user_balance = DatabaseManager().get_user_balance(openid)
     # 使用 render_template 函数来渲染 user_account.html 模板
-    return render_template('myaccount.html',nickname=nickname,headimgurl=headimgurl,records=usage_records)
-def get_usage_records(openid):
-    # 连接到数据库
-    cnx = mysql.connector.connect(user='root', password='mysql@123',
-                                  host='127.0.0.1',
-                                  database='myaccount')
-
-    cursor = cnx.cursor()
-
-    # 创建查询语句
-    query = ("SELECT usage_time, type, model, token_length "
-             "FROM usage_records "
-             "WHERE openid = %s")
-
-    # 执行查询
-    cursor.execute(query, (openid,))
-
-    # 获取查询结果
-    records = []
-    for (usage_time, usage_type, model, token_length) in cursor:
-        record = {
-            'usage_time': usage_time,
-            'type': usage_type,
-            'model': model,
-            'token_length': token_length
-        }
-        records.append(record)
-
-    # 关闭游标和连接
-    cursor.close()
-    cnx.close()
-
-    return records
+    return render_template('myaccount.html',nickname=nickname,headimgurl=headimgurl,records=usage_records,user_balance=user_balance)
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)    
