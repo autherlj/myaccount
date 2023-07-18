@@ -4,7 +4,9 @@ from flask import Flask, request, render_template
 import requests
 import mysql.connector
 from db_manager import DatabaseManager
+
 app = Flask(__name__)
+
 
 @app.route('/myaccount', methods=['GET'])
 def handle_wechat_redirect():
@@ -35,20 +37,20 @@ def handle_wechat_redirect():
         'lang': 'zh_CN'
     }
     try:
-       response = requests.get(userinfo_url, params=params)
-       response_json = response.json()
-       nickname = response_json.get('nickname').encode('latin1').decode('utf-8')
-       headimgurl = response_json.get('headimgurl')
+        response = requests.get(userinfo_url, params=params)
+        response_json = response.json()
+        nickname = response_json.get('nickname').encode('latin1').decode('utf-8')
+        headimgurl = response_json.get('headimgurl')
     except requests.RequestException as e:
-       print(f"Error occurred during request: {e}")
-       # Handle the exception as you see fit here.
+        print(f"Error occurred during request: {e}")
+        # Handle the exception as you see fit here.
     except (UnicodeEncodeError, UnicodeDecodeError) as e:
-       print(f"Error occurred during encoding/decoding: {e}")
-       # Handle the exception as you see fit here.
+        print(f"Error occurred during encoding/decoding: {e}")
+        # Handle the exception as you see fit here.
     except Exception as e:
-       print(f"An unexpected error occurred: {e}")
-       # Handle the exception as you see fit here.
-    
+        print(f"An unexpected error occurred: {e}")
+        # Handle the exception as you see fit here.
+
     if not access_token or not openid:
         return 'Failed to get access_token or openid', 400
 
@@ -57,6 +59,9 @@ def handle_wechat_redirect():
     usage_records = DatabaseManager().get_usage_records(openid)
     user_balance = DatabaseManager().get_user_balance(openid)
     # 使用 render_template 函数来渲染 user_account.html 模板
-    return render_template('myaccount.html',nickname=nickname,headimgurl=headimgurl,records=usage_records,user_balance=user_balance)
+    return render_template('myaccount.html', nickname=nickname, headimgurl=headimgurl, records=usage_records,
+                           user_balance=user_balance)
+
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)    
+    app.run(host='0.0.0.0', port=5000)
