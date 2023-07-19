@@ -5,7 +5,7 @@ import requests
 import mysql.connector
 from db_manager import DatabaseManager
 
-app = Flask(__name__)
+app = Flask(__name__,static_url_path='/static')
 
 
 @app.route('/myaccount', methods=['GET'])
