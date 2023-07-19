@@ -2,115 +2,178 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <title>我的账户</title>
     <style>
         body {
             background-color: #f5f5f5;
         }
+
         .table-container {
             margin-top: 30px;
+        }
+
+        .btn-group .btn {
+            margin-right: 5px; /* 右侧间隔 */
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand">我的账户</a>
-        <span class="navbar-text">
-            <img src="{{ headimgurl }}" width="30" height="30" class="d-inline-block align-top rounded-circle" alt="">
-            {{ nickname }}
-        </span>
-    </nav>
-
-    <div class="container table-container">
-        <div class="card">
-            <div class="card-body">
-		    <h5 class="card-title">名称：{{ nickname }}</h5>
-                <p class="card-text">余额：{{ user_balance }}</p> 
-                <a href="#" class="btn btn-primary">充值</a>
-                <!-- Button trigger modal -->
-                <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">计费规则</a>
-
-                <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">计费规则</h5>
+<!-- Recharge Modal -->
+<div class="modal fade" id="rechargeModal" tabindex="-1" role="dialog" aria-labelledby="rechargeModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rechargeModalLabel">充值选择</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
+            </div>
+            <div class="modal-body">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-secondary active">
+                        <input type="radio" name="options" id="option1" autocomplete="off" checked>
+                        19.9元
+                        <hr>
+                        100000 tokens
+                    </label>
+                    <label class="btn btn-secondary">
+                        <input type="radio" name="options" id="option2" autocomplete="off">
+                        39.9元
+                        <hr>
+                        200000 tokens
+                    </label>
+                    <label class="btn btn-secondary">
+                        <input type="radio" name="options" id="option3" autocomplete="off">
+                        59.9元
+                        <hr>
+                        300000 tokens
+                    </label>
+                    <label class="btn btn-secondary">
+                        <input type="radio" name="options" id="option4" autocomplete="off">
+                        79.9元
+                        <hr>
+                        400000 tokens
+                    </label>
                 </div>
-                <div class="modal-body">
-                文本对话： 1 积分 = 100 token<br>
-                AI绘图:   1 积分 = 500 token<br><br>
-                </div>
-                <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">立即支付</button>
             </div>
         </div>
     </div>
 </div>
+<nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand">我的账户</a>
+    <span class="navbar-text">
+            <img src="{{ headimgurl }}" width="30" height="30" class="d-inline-block align-top rounded-circle" alt="">
+            {{ nickname }}
+        </span>
+</nav>
 
+<div class="container table-container">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">名称：{{ nickname }}</h5>
+            <p class="card-text">余额：{{ user_balance }}</p>
+            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#rechargeModal">充值</a>
+            <!-- Button trigger modal -->
+            <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">计费规则</a>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">计费规则</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                        <pre>
+                        文本对话： 0.2 RMB = 1000 token
+                        AI绘图:   0.6 RMB = 3000 token
+                        </pre>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                        </div>
+                    </div>
+                </div>
             </div>
+
         </div>
-        
-        <hr class="my-4"> <!-- 添加分割线，并设置上下边距为 4 个单位 -->
+    </div>
+
+    <hr class="my-4"> <!-- 添加分割线，并设置上下边距为 4 个单位 -->
 
 
     <table class="table">
         <thead class="thead-light">
-            <tr>
-                <h5 class="card-title">充值记录：</h5>
-                <th scope="col">订单号</th>
-                <th scope="col">充值时间</th>
-                <th scope="col">充值积分</th>
-                <th scope="col">充值金额</th>
-            </tr>
+        <tr>
+            <h5 class="card-title">充值记录：</h5>
+            <th scope="col">订单号</th>
+            <th scope="col">充值时间</th>
+            <th scope="col">充值积分</th>
+            <th scope="col">充值金额</th>
+        </tr>
         </thead>
         <tbody>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <!-- 充值记录数据 -->
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <!-- 充值记录数据 -->
         </tbody>
     </table>
 
-        <hr class="my-4"> <!-- 添加分割线，并设置上下边距为 4 个单位 -->
+    <hr class="my-4"> <!-- 添加分割线，并设置上下边距为 4 个单位 -->
 
-        <table class="table mt-4">
-            <thead class="thead-light">
-                <tr>
-                    <h5 class="card-title">使用记录：</h5> 
-                    <th scope="col">使用时间</th>
-                    <th scope="col">类型</th>
-                    <th scope="col">底层模型</th>
-                    <th scope="col">Token消耗</th>
-                </tr>
-            </thead>
+    <table class="table mt-4">
+        <thead class="thead-light">
+        <tr>
+            <h5 class="card-title">使用记录：</h5>
+            <th scope="col">使用时间</th>
+            <th scope="col">类型</th>
+            <th scope="col">底层模型</th>
+            <th scope="col">Token消耗</th>
+        </tr>
+        </thead>
 
-            <tbody>
-		{% for record in records %}    
-                <tr>
-                    <td>{{ record.usage_time }}</td>
-                    <td>{{ record.type }}</td>
-                    <td>{{ record.model }}</td>
-                    <td>{{ record.token_length }}</td>
-                </tr>
-		{% endfor %}
-                <!-- 充值记录数据 -->
-            </tbody>
+        <tbody>
+        {% for record in records %}
+            <tr>
+                <td>{{ record.usage_time }}</td>
+                <td>{{ record.type }}</td>
+                <td>{{ record.model }}</td>
+                <td>{{ record.token_length }}</td>
+            </tr>
+        {% endfor %}
+        <!-- 充值记录数据 -->
+        </tbody>
 
-        </table>
-    </div>
+    </table>
+</div>
 
-    <script src="{{ url_for('static', filename='js/jquery-3.3.1.slim.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery-3.3.1.slim.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const payButton = document.querySelector('.btn-primary');
+        payButton.addEventListener('click', function () {
+            const selectedOption = document.querySelector('.btn-group-toggle input:checked');
+            alert(selectedOption.parentElement.textContent.trim());
+        });
+    });
+</script>
 </html>
 
