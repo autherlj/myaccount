@@ -1,5 +1,5 @@
 domain = "https://bot.jungeclub.club/api/"
 wechatmp_app_id = "wxa31121df217466fd"
-wechatmp_app_secret = "23f9655e97542d4230a1ac9eea819ee7"
+wechatmp_app_secret = "fe3f4efe62e2cb8d53b5565235d71203"
 hupi_appid = "201906158913"
 hupi_appSecret = "35870816054ba3d865c03abdc5ff8986"
