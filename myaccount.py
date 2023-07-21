@@ -32,8 +32,6 @@ def handle_wechat_redirect():
     # 从响应中获取 access_token 和 openid
     access_token = response_json.get('access_token')
     openid = response_json.get('openid')
-    # 将openid存储到session中
-    session['openid'] = openid
     userinfo_url = 'https://api.weixin.qq.com/sns/userinfo'
     params = {
         'access_token': access_token,
