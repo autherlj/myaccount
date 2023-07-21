@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from flask import Flask, request, render_template, session, Blueprint
+from flask import Flask, request, render_template, session, Blueprint, jsonify, redirect
 import requests
 from db_manager import DatabaseManager
 from hupijiao_pay import Hupi
 from datetime import datetime
+import config
 import uuid
-
+import xml.etree.ElementTree as ET
 app = Flask(__name__, static_url_path='/static')
 api = Blueprint('api', __name__, url_prefix='/api')
 
@@ -21,8 +22,8 @@ def handle_wechat_redirect():
     # 使用 code 获取 access_token 和 openid
     url = 'https://api.weixin.qq.com/sns/oauth2/access_token'
     params = {
-        'appid': 'wxa31121df217466fd',
-        'secret': '23f9655e97542d4230a1ac9eea819ee7',
+        'appid': config.wechatmp_app_id,
+        'secret': config.wechatmp_app_secret,
         'code': code,
         'grant_type': 'authorization_code'
     }
@@ -63,8 +64,6 @@ def handle_wechat_redirect():
     # 使用 render_template 函数来渲染 user_account.html 模板
     return render_template('myaccount.html', nickname=nickname, headimgurl=headimgurl, records=usage_records,
                            user_balance=user_balance)
-
-
 def generate_order_id() -> object:
     # Get current date as string in the format YYYYMMDD
     date_str = datetime.now().strftime('%Y%m%d')
@@ -89,16 +88,32 @@ def handle_pay():
     tokens = data.get('tokens')
     obj = Hupi()
     r = obj.Pay(generate_order_id(), "wechat", price, "隽戈智能")
-    return r
+    response_data = r.json()  # 假设 r 包含了 JSON 数据
+    # 提取出跳转URL
+    url = response_data.get('url')
+    # 返回包含跳转URL的JSON数据
+    return jsonify({"url": url}), r.status_code
 
 
 @api.route('/wechat_pay_notify', methods=['POST'])
 def handle_wechat_pay_notify():
     # 这里处理微信支付通知
-    # 解析请求中的XML数据，检查支付结果，更新订单状态等
-    data = request.get_json()
+    # 获取POST数据
+    post_data = request.data
+    # 解析XML数据
+    root = ET.fromstring(post_data)
+    # 将XML数据转为字典
+    data = {child.tag: child.text for child in root}
     print(f"接受到的notify数据: {data}")
-    return data
+    # 返回 "success" 字符串
+    return "success"
+@api.route('/redirect', methods=['GET'])
+def handle_redirect():
+    # 这里构造你的微信授权URL
+    wechat_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa31121df217466fd&redirect_uri=https://bot.jungeclub.club/api/myaccount&response_type=code&scope=snsapi_userinfo&state=STATE&connect_redirect=1#wechat_redirect'
+
+    # 使用 flask.redirect 函数来重定向到微信授权的URL
+    return redirect(wechat_url)
 
 
 app.register_blueprint(api)

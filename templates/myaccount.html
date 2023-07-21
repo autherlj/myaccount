@@ -33,7 +33,7 @@
             </div>
             <div class="modal-body">
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-secondary active" data-price="19.9" data-tokens="100000">
+                    <label class="btn btn-secondary active" data-price="0.01" data-tokens="100000">
                         <input type="radio" name="options" id="option1" autocomplete="off" checked>
                         19.9元
                         <hr>
@@ -180,8 +180,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
         const selectedOption = document.querySelector('.btn-group-toggle input:checked').parentElement;
         const price = selectedOption.dataset.price;
         const tokens = selectedOption.dataset.tokens;
-        alert(price)
-        alert(tokens)
         // 发送请求到服务器
         fetch('/api/pay', {
             method: 'POST',
@@ -193,7 +191,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 tokens: tokens
             }) // 将 price 和 tokens 的值作为 JSON 数据发送
         }).then(response => response.json())
-          .then(data => alert(data.message))
+          .then(data => {
+            const url = data.url;
+            window.location.href = url;  // 跳转到支付URL
+            })
           .catch(error => console.error('Error:', error));
     });
 });

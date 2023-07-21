@@ -13,16 +13,16 @@ def ksort(d):
 
 class Hupi(object):
     def __init__(self):
-        self.appid = "201906158913"  # 在虎皮椒V3申请的appid
-        self.AppSecret = ""  # 在虎皮椒V3申请的AppSecret
+        self.appid = config.hupi_appid  # 在虎皮椒V3申请的appid
+        self.AppSecret = config.hupi_appSecret  # 在虎皮椒V3申请的AppSecret
         self.notify_url = config.domain + 'wechat_pay_notify/'
-        # self.return_url = config.domain + 'myaccount'
+        self.return_url = config.domain + 'redirect/'
         # self.callback_url = config.domain + 'myaccount'
 
     def curl(self, data, url):
         data['hash'] = self.sign(data)
         print(data)
-        headers = {"Referer": "https://bot.jungeclub.club/api"}  # 自己的网站地址
+        headers = {"Referer": "https://bot.jungeclub.club/api/myaccount"}  # 自己的网站地址
         r = requests.post(url, data=data, headers=headers)
         return r
 
@@ -52,15 +52,9 @@ class Hupi(object):
             "description": "",
             "time": str(int(time.time())),
             "notify_url": self.notify_url,  # 回调URL（订单支付成功后，WP开放平台会把支付成功消息异步回调到这个地址上）
-            # "return_url": self.return_url,  # 支付成功url(订单支付成功后，浏览器会跳转到这个地址上)
+            "return_url": self.return_url,  # 支付成功url(订单支付成功后，浏览器会跳转到这个地址上)
             # "callback_url": self.callback_url,  # 商品详情URL或支付页面的URL（移动端，商品支付失败时，会跳转到这个地址上）
             "nonce_str": str(int(time.time())),  # 随机字符串(一定要每次都不一样，保证请求安全)
         }
         return self.curl(data, url)
 
-
-# if __name__ == "__main__":
-#     obj = Hupi()
-#     r = obj.Pay("2_13534545343dfd", "wechat", "0.1", "test")
-#     print(r, r.text)
-#     print(r.json()["url"])
