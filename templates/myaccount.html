@@ -33,25 +33,25 @@
             </div>
             <div class="modal-body">
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-secondary active">
+                    <label class="btn btn-secondary active" data-price="19.9" data-tokens="100000">
                         <input type="radio" name="options" id="option1" autocomplete="off" checked>
                         19.9元
                         <hr>
                         100000 tokens
                     </label>
-                    <label class="btn btn-secondary">
+                    <label class="btn btn-secondary" data-price="39.9" data-tokens="200000">
                         <input type="radio" name="options" id="option2" autocomplete="off">
                         39.9元
                         <hr>
                         200000 tokens
                     </label>
-                    <label class="btn btn-secondary">
+                    <label class="btn btn-secondary" data-price="59.9" data-tokens="300000">
                         <input type="radio" name="options" id="option3" autocomplete="off">
                         59.9元
                         <hr>
                         300000 tokens
                     </label>
-                    <label class="btn btn-secondary">
+                    <label class="btn btn-secondary" data-price="79.9" data-tokens="400000">
                         <input type="radio" name="options" id="option4" autocomplete="off">
                         79.9元
                         <hr>
@@ -174,13 +174,29 @@
 <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 </body>
 <script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-        const payButton = document.querySelector('.btn-primary');
-        payButton.addEventListener('click', function () {
-            const selectedOption = document.querySelector('.btn-group-toggle input:checked');
-            alert(selectedOption.parentElement.textContent.trim());
-        });
+document.addEventListener('DOMContentLoaded', (event) => {
+    const payButton = document.querySelector('.btn-primary');
+    payButton.addEventListener('click', function () {
+        const selectedOption = document.querySelector('.btn-group-toggle input:checked').parentElement;
+        const price = selectedOption.dataset.price;
+        const tokens = selectedOption.dataset.tokens;
+        alert(price)
+        alert(tokens)
+        // 发送请求到服务器
+        fetch('/api/pay', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                price: price,
+                tokens: tokens
+            }) // 将 price 和 tokens 的值作为 JSON 数据发送
+        }).then(response => response.json())
+          .then(data => alert(data.message))
+          .catch(error => console.error('Error:', error));
     });
+});
 </script>
 </html>
 
