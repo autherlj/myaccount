@@ -15,8 +15,8 @@ class Hupi(object):
     def __init__(self):
         self.appid = config.hupi_appid  # 在虎皮椒V3申请的appid
         self.AppSecret = config.hupi_appSecret  # 在虎皮椒V3申请的AppSecret
-        self.notify_url = config.domain + 'wechat_pay_notify/'
-        self.return_url = config.domain + 'redirect/'
+        self.notify_url = config.domain + 'wechat_pay_notify'
+        self.return_url = config.domain + 'redirect'
         # self.callback_url = config.domain + 'myaccount'
 
     def curl(self, data, url):

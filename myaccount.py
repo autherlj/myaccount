@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import Flask, request, render_template, session, Blueprint, jsonify, redirect
+from flask import Flask, request, render_template, Response, Blueprint, jsonify, redirect
 import requests
 from db_manager import DatabaseManager
 from hupijiao_pay import Hupi
@@ -97,14 +97,15 @@ def handle_pay():
 @api.route('/wechat_pay_notify', methods=['POST'])
 def handle_wechat_pay_notify():
     # 这里处理微信支付通知
-    # 获取POST数据，这是一个字典
-    data = request.get_json()
+    # 获取POST数据
+    post_data = request.data
+    # 解析XML数据
+    root = ET.fromstring(post_data)
+    # 将XML数据转为字典
+    data = {child.tag: child.text for child in root}
     print(f"接受到的notify数据: {data}")
-
-    # 在这里，你可以进一步处理data（例如，更新订单状态等）
-
-    # 处理成功，返回 "success"
-    return jsonify({"message": "success"})
+    # 返回 "success" 字符串
+    return Response("<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>", mimetype='text/xml')
 @api.route('/redirect', methods=['GET'])
 def handle_redirect():
     # 这里构造你的微信授权URL
