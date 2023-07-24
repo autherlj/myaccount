@@ -68,3 +68,43 @@ class DatabaseManager(metaclass=Singleton):
 
         return records, balance
 
+    def insert_record_and_update_balance_and_status(self, trade_order_id, time, tokens, price, openid):
+        # 从连接池获取连接
+        cnx = self.cnxpool.get_connection()
+
+        cursor = cnx.cursor()
+
+        try:
+            # 创建插入语句
+            insert_query = ("INSERT INTO recharge_records "
+                            "(trade_order_id, time, tokens, price, openid) "
+                            "VALUES (%s, %s, %s, %s, %s)")
+
+            # 执行插入
+            cursor.execute(insert_query, (trade_order_id, time, tokens, price, openid))
+
+            # 创建更新语句
+            update_query = ("UPDATE user_balance "
+                            "SET balance = balance + %s "
+                            "WHERE openid = %s")
+
+            # 执行更新
+            cursor.execute(update_query, (tokens, openid))
+
+            # 创建更新语句
+            update_usage_status = ("UPDATE user_status "
+                            "SET usage_status = 1 "
+                            "WHERE openid = %s AND usage_status = 0")
+
+            # 执行更新
+            cursor.execute(update_usage_status, (tokens, openid))
+            # 提交事务
+            cnx.commit()
+        except Exception as e:
+            # 如果在执行插入或更新操作时发生错误，回滚事务
+            cnx.rollback()
+            print(f"An error occurred: {e}")
+        finally:
+            # 关闭游标和连接
+            cursor.close()
+            cnx.close()

@@ -8,6 +8,7 @@ from datetime import datetime
 import config
 import uuid
 import json
+from json import JSONDecodeError
 import logging
 
 app = Flask(__name__, static_url_path='/static')
@@ -109,13 +110,31 @@ def handle_pay():
 @api.route('/wechat_pay_notify', methods=['POST'])
 def handle_wechat_pay_notify():
     if request.method == 'POST':
-        # 获取POST数据
-        post_data = request.form
-        # 打印所有的参数
-        app.logger.info("Received parameters: %s", post_data)
+        try:
+            # 获取POST数据
+            post_data = request.form
+            # 打印所有的参数
+            app.logger.info("Received parameters: %s", post_data)
 
-        # 在这里执行你的业务逻辑，例如验证签名，更新订单状态等
-        # ...
+            # 在这里执行你的业务逻辑，例如验证签名，更新订单状态等
+            trade_order_id = post_data.get('trade_order_id')
+            # attach 是一个包含 JSON 数据的字符串，所以你需要先将其解析为一个字典
+            attach = json.loads(post_data.get('attach'))
+            # 现在你可以从 attach 字典中获取 openid 和 tokens
+            openid = attach.get('openid')
+            tokens = int(attach.get('tokens'))
+            time = post_data.get('time')
+            price = post_data.get('price')
+            DatabaseManager().insert_record_and_update_balance_and_status(trade_order_id, time, tokens, price, openid)
+        except JSONDecodeError:
+            app.logger.error("Failed to decode JSON from attach: %s", post_data.get('attach'))
+            return "fail", 400
+        except ValueError:
+            app.logger.error("Failed to convert tokens to int: %s", attach.get('tokens'))
+            return "fail", 400
+        except Exception as e:
+            app.logger.error("Failed to update database: %s", e)
+            return "fail", 500
 
         # 返回 "success" 字符串
         return "success"
