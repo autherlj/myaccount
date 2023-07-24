@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import Flask, request, render_template, Blueprint, jsonify, redirect,session
+from flask import Flask, request, render_template, Blueprint, jsonify, redirect, session
 import requests
 from db_manager import DatabaseManager
 from hupijiao_pay import Hupi

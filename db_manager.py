@@ -77,7 +77,7 @@ class DatabaseManager(metaclass=Singleton):
         try:
             # 创建插入语句
             insert_query = ("INSERT INTO recharge_records "
-                            "(trade_order_id, time, tokens, price, openid) "
+                            "(order_id, recharge_time, recharge_tokens, recharge_amount, openid) "
                             "VALUES (%s, %s, %s, %s, %s)")
 
             # 执行插入
