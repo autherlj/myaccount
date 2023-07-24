@@ -33,17 +33,17 @@
             </div>
             <div class="modal-body">
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-secondary active" data-price="0.01" data-tokens="100000">
+                    <label class="btn btn-secondary active" data-price="9.9" data-tokens="100000">
                         <input type="radio" name="options" id="option1" autocomplete="off" checked>
-                        19.9元
+                        9.9元
                         <hr>
-                        100000 tokens
+                        50000 tokens
                     </label>
                     <label class="btn btn-secondary" data-price="39.9" data-tokens="200000">
                         <input type="radio" name="options" id="option2" autocomplete="off">
-                        39.9元
+                        19.9元
                         <hr>
-                        200000 tokens
+                        100000 tokens
                     </label>
                     <label class="btn btn-secondary" data-price="59.9" data-tokens="300000">
                         <input type="radio" name="options" id="option3" autocomplete="off">
@@ -134,7 +134,7 @@
         {% if recharge_records %}
             {% for recharge_record in recharge_records %}
                 <tr>
-                <td>{{ recharge_record.order_id }}</td>
+                <td>{{ recharge_record.order_id[:8] }}</td>
                 <td>{{ recharge_record.recharge_time }}</td>
                 <td>{{ recharge_record.recharge_tokens }}</td>
                 <td>{{ recharge_record.recharge_amount }}</td>

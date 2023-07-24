@@ -141,13 +141,14 @@ def handle_wechat_pay_notify():
 
         # 返回 "success" 字符串
         return "success"
-@api.route('/redirect', methods=['GET'])
-def handle_redirect():
-    # 这里构造你的微信授权URL
-    wechat_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa31121df217466fd&redirect_uri=https://bot.jungeclub.club/api/myaccount&response_type=code&scope=snsapi_userinfo&state=STATE&connect_redirect=1#wechat_redirect'
-
-    # 使用 flask.redirect 函数来重定向到微信授权的URL
-    return redirect(wechat_url)
+# @api.route('/redirect', methods=['GET'])
+# @api.route('/redirect', methods=['GET'])
+# def handle_redirect():
+#     # 这里构造你的微信授权URL
+#     wechat_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa31121df217466fd&redirect_uri=https://bot.jungeclub.club/api/myaccount&response_type=code&scope=snsapi_userinfo&state=STATE&connect_redirect=1#wechat_redirect'
+#
+#     # 使用 flask.redirect 函数来重定向到微信授权的URL
+#     return redirect(wechat_url)
 
 
 app.register_blueprint(api)
