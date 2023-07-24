@@ -68,7 +68,8 @@ class DatabaseManager(metaclass=Singleton):
                                   "FROM recharge_records "
                                   "WHERE openid = %s "
                                   "ORDER BY recharge_time DESC")
-
+        logger.info("Executing query: %s", query_recharge_records)
+        logger.info("With parameters: %s", (openid,))
         # Execute the query
         cursor.execute(query_recharge_records, (openid,))
 
