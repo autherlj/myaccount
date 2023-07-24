@@ -17,6 +17,11 @@
         .btn-group .btn {
             margin-right: 5px; /* 右侧间隔 */
         }
+        .break-word {
+            word-wrap: break-word;
+            max-width: 8ch;
+        }
+
     </style>
 </head>
 <body>
@@ -33,29 +38,29 @@
             </div>
             <div class="modal-body">
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-secondary active" data-price="9.9" data-tokens="50000">
+                    <label class="btn btn-secondary active" data-price="1.9" data-tokens="2000">
                         <input type="radio" name="options" id="option1" autocomplete="off" checked>
+                        1.9元
+                        <hr>
+                        2000 tokens
+                    </label>
+                    <label class="btn btn-secondary" data-price="19.9" data-tokens="10000">
+                        <input type="radio" name="options" id="option2" autocomplete="off">
                         9.9元
                         <hr>
-                        50000 tokens
+                        10000 tokens
                     </label>
-                    <label class="btn btn-secondary" data-price="19.9" data-tokens="100000">
-                        <input type="radio" name="options" id="option2" autocomplete="off">
+                    <label class="btn btn-secondary" data-price="59.9" data-tokens="20000">
+                        <input type="radio" name="options" id="option3" autocomplete="off">
                         19.9元
                         <hr>
-                        100000 tokens
+                        20000 tokens
                     </label>
-                    <label class="btn btn-secondary" data-price="59.9" data-tokens="300000">
-                        <input type="radio" name="options" id="option3" autocomplete="off">
-                        59.9元
-                        <hr>
-                        300000 tokens
-                    </label>
-                    <label class="btn btn-secondary" data-price="79.9" data-tokens="400000">
+                    <label class="btn btn-secondary" data-price="79.9" data-tokens="30000">
                         <input type="radio" name="options" id="option4" autocomplete="off">
-                        79.9元
+                        29.9元
                         <hr>
-                        400000 tokens
+                        30000 tokens
                     </label>
                 </div>
 
@@ -134,7 +139,7 @@
         {% if recharge_records %}
             {% for recharge_record in recharge_records %}
                 <tr>
-                <td>{{ recharge_record.order_id[:8] }}</td>
+                <td class="break-word">{{ recharge_record.order_id }}</td>
                 <td>{{ recharge_record.recharge_time }}</td>
                 <td>{{ recharge_record.recharge_tokens }}</td>
                 <td>{{ recharge_record.recharge_amount }}</td>
