@@ -1,17 +1,21 @@
 # -*- coding: utf-8 -*-
 
-from flask import Flask, request, render_template, Response, Blueprint, jsonify, redirect
+from flask import Flask, request, render_template, Blueprint, jsonify, redirect
 import requests
 from db_manager import DatabaseManager
 from hupijiao_pay import Hupi
 from datetime import datetime
 import config
 import uuid
-import xml.etree.ElementTree as ET
+import logging
+
 app = Flask(__name__, static_url_path='/static')
 api = Blueprint('api', __name__, url_prefix='/api')
-
-
+app.logger.setLevel(logging.INFO)  # 设置日志级别为 INFO
+handler = logging.StreamHandler()  # 创建一个流处理器
+app.logger.addHandler(handler)  # 将流处理器添加到 logger
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')  # 创建一个日志格式器
+handler.setFormatter(formatter)  # 将日志格式器设置为流处理器的格式器
 @api.route('/myaccount', methods=['GET'])
 def handle_wechat_redirect():
     # 获取 URL 中的 code 参数
@@ -101,7 +105,7 @@ def handle_wechat_pay_notify():
         post_data = request.form
 
         # 打印所有的参数
-        print("Received parameters: ", post_data)
+        app.logger.info("Received parameters: %s", post_data)
 
         # 在这里执行你的业务逻辑，例如验证签名，更新订单状态等
         # ...
