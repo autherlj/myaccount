@@ -37,7 +37,7 @@ class Hupi(object):
         print(sign)
         return sign
 
-    def Pay(self, trade_order_id, payment, total_fee, title):
+    def Pay(self, trade_order_id, payment, total_fee, title,attach):
         url = "https://api.xunhupay.com/payment/do.html"
         data = {
             "version": "1.1",
@@ -50,6 +50,7 @@ class Hupi(object):
             "total_fee": total_fee,
             "title": title,
             "description": "",
+            "attach": attach,
             "time": str(int(time.time())),
             "notify_url": self.notify_url,  # 回调URL（订单支付成功后，WP开放平台会把支付成功消息异步回调到这个地址上）
             "return_url": self.return_url,  # 支付成功url(订单支付成功后，浏览器会跳转到这个地址上)

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import Flask, request, render_template, Blueprint, jsonify, redirect
+from flask import Flask, request, render_template, Blueprint, jsonify, redirect,session
 import requests
 from db_manager import DatabaseManager
 from hupijiao_pay import Hupi
@@ -11,6 +11,7 @@ import logging
 
 app = Flask(__name__, static_url_path='/static')
 api = Blueprint('api', __name__, url_prefix='/api')
+app.secret_key = config.session_secret_key  # 请更改为你自己的秘钥
 app.logger.setLevel(logging.INFO)  # 设置日志级别为 INFO
 handler = logging.StreamHandler()  # 创建一个流处理器
 app.logger.addHandler(handler)  # 将流处理器添加到 logger
@@ -36,7 +37,8 @@ def handle_wechat_redirect():
 
     # 从响应中获取 access_token 和 openid
     access_token = response_json.get('access_token')
-    openid = response_json.get('openid')
+    session['openid'] = response_json.get('openid')
+    openid = session.get('openid')
     userinfo_url = 'https://api.weixin.qq.com/sns/userinfo'
     params = {
         'access_token': access_token,
@@ -88,9 +90,13 @@ def handle_pay():
     data = request.get_json()
     # 通过键来访问字典中的值
     price = data.get('price')
-    tokens = data.get('tokens')
+    attach = {
+        "openid": session.get('openid'),
+        "price": data.get('price'),
+        "tokens": data.get('tokens')
+    }
     obj = Hupi()
-    r = obj.Pay(generate_order_id(), "wechat", price, "隽戈智能")
+    r = obj.Pay(generate_order_id(), "wechat", price, "隽戈智能",attach)
     response_data = r.json()  # 假设 r 包含了 JSON 数据
     # 提取出跳转URL
     url = response_data.get('url')
@@ -103,7 +109,6 @@ def handle_wechat_pay_notify():
     if request.method == 'POST':
         # 获取POST数据
         post_data = request.form
-
         # 打印所有的参数
         app.logger.info("Received parameters: %s", post_data)
 
