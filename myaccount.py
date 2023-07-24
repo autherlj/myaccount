@@ -123,7 +123,7 @@ def handle_wechat_pay_notify():
             # 现在你可以从 attach 字典中获取 openid 和 tokens
             openid = attach.get('openid')
             tokens = int(attach.get('tokens'))
-            time = post_data.get('time')
+            time = datetime.fromtimestamp(int(post_data.get('time')))
             price = post_data.get('price')
             app.logger.info(trade_order_id,tokens,openid,time,price)
             DatabaseManager().insert_record_and_update_balance_and_status(trade_order_id, time, tokens, price, openid)
