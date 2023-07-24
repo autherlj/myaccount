@@ -101,13 +101,14 @@ class DatabaseManager(metaclass=Singleton):
         # Check if the query result is empty
         balance = None if result is None else result[0]  # Return balance value
 
-        return records, balance
+        return records, recharge_records, balance
 
     def insert_record_and_update_balance_and_status(self, trade_order_id, time, tokens, price, openid):
         # 从连接池获取连接
         cnx = self.cnxpool.get_connection()
 
         cursor = cnx.cursor()
+
 
         try:
             # 创建插入语句
