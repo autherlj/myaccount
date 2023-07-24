@@ -126,17 +126,25 @@
             <h5 class="card-title">充值记录：</h5>
             <th scope="col">订单号</th>
             <th scope="col">充值时间</th>
-            <th scope="col">充值积分</th>
+            <th scope="col">充值Tokens</th>
             <th scope="col">充值金额</th>
         </tr>
         </thead>
         <tbody>
+        {% if recharge_records %}
+            {% for recharge_record in recharge_records %}
+                <tr>
+                <td>{{ recharge_record.order_id }}</td>
+                <td>{{ recharge_record.recharge_time }}</td>
+                <td>{{ recharge_record.recharge_tokens }}</td>
+                <td>{{ recharge_record.recharge_amount }}</td>
+            </tr>
+            {% endfor %}
+            {% else %}
         <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td colspan="4">没有找到充值记录。</td>
         </tr>
+        {% endif %}
         <!-- 充值记录数据 -->
         </tbody>
     </table>
@@ -155,6 +163,7 @@
         </thead>
 
         <tbody>
+        {% if records %}
         {% for record in records %}
             <tr>
                 <td>{{ record.usage_time }}</td>
@@ -163,7 +172,12 @@
                 <td>{{ record.token_length }}</td>
             </tr>
         {% endfor %}
-        <!-- 充值记录数据 -->
+         {% else %}
+        <tr>
+            <td colspan="4">没有找到充值记录数据。</td>
+        </tr>
+          {% endif %}
+         <!-- 充值记录数据 -->
         </tbody>
 
     </table>

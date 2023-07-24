@@ -67,10 +67,10 @@ def handle_wechat_redirect():
 
     # 在这里，你可以使用获取到的 access_token 和 openid 实现用户的登录
     # 例如，你可以从数据库中获取用户的数据
-    usage_records, user_balance = DatabaseManager().get_user_records_balance(openid)
+    usage_records, recharge_records, user_balance = DatabaseManager().get_user_records_balance(openid)
     # 使用 render_template 函数来渲染 user_account.html 模板
     return render_template('myaccount.html', nickname=nickname, headimgurl=headimgurl, records=usage_records,
-                           user_balance=user_balance)
+                           user_balance=user_balance,recharge_records=recharge_records)
 def generate_order_id() -> object:
     # Get current date as string in the format YYYYMMDD
     date_str = datetime.now().strftime('%Y%m%d')

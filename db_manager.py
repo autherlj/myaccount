@@ -17,6 +17,7 @@ stream_handler.setFormatter(stream_format)
 # Add handlers to the logger
 logger.addHandler(stream_handler)
 
+
 class Singleton(type):
     _instances = {}
 
@@ -44,9 +45,9 @@ class DatabaseManager(metaclass=Singleton):
 
         # Create query statement for usage records
         query_records = ("SELECT usage_time, type, model, token_length "
-                     "FROM usage_records "
-                     "WHERE openid = %s "
-                     "ORDER BY usage_time DESC")
+                         "FROM usage_records "
+                         "WHERE openid = %s "
+                         "ORDER BY usage_time DESC")
 
         # Execute the query
         cursor.execute(query_records, (openid,))
@@ -55,17 +56,37 @@ class DatabaseManager(metaclass=Singleton):
         records = []
         for (usage_time, usage_type, model, token_length) in cursor:
             record = {
-                    'usage_time': usage_time,
-                    'type': usage_type,
-                    'model': model,
-                    'token_length': token_length
+                'usage_time': usage_time,
+                'type': usage_type,
+                'model': model,
+                'token_length': token_length
             }
             records.append(record)
 
+        # Create query statement for usage records
+        query_recharge_records = ("SELECT order_id, recharge_time, recharge_tokens, recharge_amount, openid "
+                                  "FROM recharge_records "
+                                  "WHERE openid = %s "
+                                  "ORDER BY recharge_time DESC")
+
+        # Execute the query
+        cursor.execute(query_recharge_records, (openid,))
+
+        # Fetch the query result
+        recharge_records = []
+        for (order_id, recharge_time, recharge_tokens, recharge_amount) in cursor:
+            record = {
+                'order_id': order_id,
+                'recharge_time': recharge_time,
+                'recharge_tokens': recharge_tokens,
+                'recharge_amount': recharge_amount
+            }
+            recharge_records.append(record)
+
         # Create query statement for user balance
         query_balance = ("SELECT balance "
-                        "FROM user_balance "
-                        "WHERE openid = %s")
+                         "FROM user_balance "
+                         "WHERE openid = %s")
 
         # Execute the query
         cursor.execute(query_balance, (openid,))
@@ -107,11 +128,11 @@ class DatabaseManager(metaclass=Singleton):
 
             # 创建更新语句
             update_usage_status = ("UPDATE user_status "
-                            "SET usage_status = 1 "
-                            "WHERE openid = %s AND usage_status = 0")
+                                   "SET usage_status = 1 "
+                                   "WHERE openid = %s AND usage_status = 0")
 
             # 执行更新
-            cursor.execute(update_usage_status, (tokens, openid))
+            cursor.execute(update_usage_status, (openid,))
             # 提交事务
             cnx.commit()
         except Exception as e:
