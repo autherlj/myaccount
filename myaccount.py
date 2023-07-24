@@ -59,8 +59,7 @@ def handle_wechat_redirect():
 
     # 在这里，你可以使用获取到的 access_token 和 openid 实现用户的登录
     # 例如，你可以从数据库中获取用户的数据
-    usage_records = DatabaseManager().get_usage_records(openid)
-    user_balance = DatabaseManager().get_user_balance(openid)
+    usage_records, user_balance = DatabaseManager().get_user_records_balance(openid)
     # 使用 render_template 函数来渲染 user_account.html 模板
     return render_template('myaccount.html', nickname=nickname, headimgurl=headimgurl, records=usage_records,
                            user_balance=user_balance)
@@ -98,15 +97,14 @@ def handle_pay():
 @api.route('/wechat_pay_notify', methods=['POST'])
 def handle_wechat_pay_notify():
     # 这里处理微信支付通知
-    # 获取POST数据
-    post_data = request.data
-    # 解析XML数据
-    root = ET.fromstring(post_data)
-    # 将XML数据转为字典
-    data = {child.tag: child.text for child in root}
+    # 获取POST数据，这是一个字典
+    data = request.get_json()
     print(f"接受到的notify数据: {data}")
-    # 返回 "success" 字符串
-    return "success"
+
+    # 在这里，你可以进一步处理data（例如，更新订单状态等）
+
+    # 处理成功，返回 "success"
+    return jsonify({"message": "success"})
 @api.route('/redirect', methods=['GET'])
 def handle_redirect():
     # 这里构造你的微信授权URL

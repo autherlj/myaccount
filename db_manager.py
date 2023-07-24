@@ -22,61 +22,49 @@ class DatabaseManager(metaclass=Singleton):
         }
         self.cnxpool = mysql.connector.pooling.MySQLConnectionPool(pool_size=pool_size, **dbconfig)
 
-    def get_usage_records(self, openid):
+    def get_user_records_balance(self, openid):
         # Get connection from the pool
         cnx = self.cnxpool.get_connection()
 
         cursor = cnx.cursor()
 
-        # 创建查询语句
-        query = ("SELECT usage_time, type, model, token_length "
-                 "FROM usage_records "
-                 "WHERE openid = %s"
-                 "ORDER BY usage_time DESC")
+        # Create query statement for usage records
+        query_records = ("SELECT usage_time, type, model, token_length "
+                     "FROM usage_records "
+                     "WHERE openid = %s "
+                     "ORDER BY usage_time DESC")
 
-        # 执行查询
-        cursor.execute(query, (openid,))
+        # Execute the query
+        cursor.execute(query_records, (openid,))
 
-        # 获取查询结果
+        # Fetch the query result
         records = []
         for (usage_time, usage_type, model, token_length) in cursor:
             record = {
-                'usage_time': usage_time,
-                'type': usage_type,
-                'model': model,
-                'token_length': token_length
+                    'usage_time': usage_time,
+                    'type': usage_type,
+                    'model': model,
+                    'token_length': token_length
             }
             records.append(record)
 
-        # 关闭游标和连接
-        cursor.close()
-        cnx.close()
+        # Create query statement for user balance
+        query_balance = ("SELECT balance "
+                        "FROM user_balance "
+                        "WHERE openid = %s")
 
-        return records
+        # Execute the query
+        cursor.execute(query_balance, (openid,))
 
-    def get_user_balance(self, openid):
-        # Get connection from the pool
-        cnx = self.cnxpool.get_connection()
-
-        cursor = cnx.cursor()
-
-        # 创建查询语句
-        query = ("SELECT balance "
-                 "FROM user_balance "
-                 "WHERE openid = %s")
-
-        # 执行查询
-        cursor.execute(query, (openid,))
-
-        # 获取查询结果
+        # Fetch the query result
         result = cursor.fetchone()
 
-        # 关闭游标和连接
+        # Close the cursor and connection
         cursor.close()
         cnx.close()
 
-        # 检查查询结果是否为空
-        if result is None:
-            return None
-        else:
-            return result[0]  # 返回balance值
+        # Check if the query result is empty
+        balance = None if result is None else result[0]  # Return balance value
+
+        return records, balance
+
