@@ -125,6 +125,7 @@ def handle_wechat_pay_notify():
             tokens = int(attach.get('tokens'))
             time = post_data.get('time')
             price = post_data.get('price')
+            app.logger.info(trade_order_id,tokens,openid,time,price)
             DatabaseManager().insert_record_and_update_balance_and_status(trade_order_id, time, tokens, price, openid)
         except JSONDecodeError:
             app.logger.error("Failed to decode JSON from attach: %s", post_data.get('attach'))

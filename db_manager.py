@@ -1,7 +1,21 @@
 import mysql.connector
 from mysql.connector import pooling
-from datetime import datetime
+import logging
 
+# Create a custom logger
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+# Create handlers
+stream_handler = logging.StreamHandler()
+stream_handler.setLevel(logging.INFO)
+
+# Create formatters and add it to handlers
+stream_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+stream_handler.setFormatter(stream_format)
+
+# Add handlers to the logger
+logger.addHandler(stream_handler)
 
 class Singleton(type):
     _instances = {}
@@ -103,7 +117,8 @@ class DatabaseManager(metaclass=Singleton):
         except Exception as e:
             # 如果在执行插入或更新操作时发生错误，回滚事务
             cnx.rollback()
-            print(f"An error occurred: {e}")
+            logger.error(f"Database operation failed: {str(e)}")
+            raise e  # re-throw the exception to let the caller handle the error
         finally:
             # 关闭游标和连接
             cursor.close()
