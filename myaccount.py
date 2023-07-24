@@ -7,6 +7,7 @@ from hupijiao_pay import Hupi
 from datetime import datetime
 import config
 import uuid
+import json
 import logging
 
 app = Flask(__name__, static_url_path='/static')
@@ -90,11 +91,12 @@ def handle_pay():
     data = request.get_json()
     # 通过键来访问字典中的值
     price = data.get('price')
-    attach = {
+    attach_json = {
         "openid": session.get('openid'),
         "price": data.get('price'),
         "tokens": data.get('tokens')
     }
+    attach = json.dumps(attach_json)
     obj = Hupi()
     r = obj.Pay(generate_order_id(), "wechat", price, "隽戈智能",attach)
     response_data = r.json()  # 假设 r 包含了 JSON 数据
