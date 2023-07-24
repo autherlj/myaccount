@@ -64,7 +64,7 @@ class DatabaseManager(metaclass=Singleton):
             records.append(record)
 
         # Create query statement for usage records
-        query_recharge_records = ("SELECT order_id, recharge_time, recharge_tokens, recharge_amount, openid "
+        query_recharge_records = ("SELECT order_id, recharge_time, recharge_tokens, recharge_amount"
                                   "FROM recharge_records "
                                   "WHERE openid = %s "
                                   "ORDER BY recharge_time DESC")
