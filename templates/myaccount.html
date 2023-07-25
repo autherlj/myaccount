@@ -42,25 +42,25 @@
                         <input type="radio" name="options" id="option1" autocomplete="off" checked>
                         1.9元
                         <hr>
-                        20000 tokens
+                        20000 积分
                     </label>
                     <label class="btn btn-secondary" data-price="19.9" data-tokens="100000">
                         <input type="radio" name="options" id="option2" autocomplete="off">
                         9.9元
                         <hr>
-                        100000 tokens
+                        100000 积分
                     </label>
                     <label class="btn btn-secondary" data-price="59.9" data-tokens="200000">
                         <input type="radio" name="options" id="option3" autocomplete="off">
                         19.9元
                         <hr>
-                        200000 tokens
+                        200000 积分
                     </label>
                     <label class="btn btn-secondary" data-price="29.9" data-tokens="300000">
                         <input type="radio" name="options" id="option4" autocomplete="off">
                         29.9元
                         <hr>
-                        300000 tokens
+                        300000 积分
                     </label>
                 </div>
 
@@ -83,7 +83,7 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">名称：{{ nickname }}</h5>
-            <p class="card-text">余额：{{ user_balance }}</p>
+            <p class="card-text">积分余额：{{ user_balance }}</p>
             <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#rechargeModal">充值</a>
             <!-- Button trigger modal -->
             <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">计费规则</a>
@@ -103,11 +103,11 @@
                             <table>
                                 <tr>
                                     <td>文本对话：</td>
-                                    <td>0.2 RMB = 1000 token</td>
+                                    <td>0.2 RMB = 1000 积分</td>
                                 </tr>
                                 <tr>
                                     <td>AI绘图：</td>
-                                    <td>0.6 RMB = 3000 token</td>
+                                    <td>0.6 RMB = 3000 积分</td>
                                 </tr>
                             </table>
                         </div>
@@ -131,7 +131,7 @@
             <h5 class="card-title">充值记录：</h5>
             <th scope="col">订单号</th>
             <th scope="col">充值时间</th>
-            <th scope="col">充值Tokens</th>
+            <th scope="col">充值积分</th>
             <th scope="col">充值金额</th>
         </tr>
         </thead>
@@ -163,7 +163,7 @@
             <th scope="col">使用时间</th>
             <th scope="col">类型</th>
             <th scope="col">底层模型</th>
-            <th scope="col">Token消耗</th>
+            <th scope="col">积分消耗</th>
         </tr>
         </thead>
 
