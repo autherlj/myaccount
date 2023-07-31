@@ -98,6 +98,7 @@ def handle_pay():
         "tokens": data.get('tokens')
     }
     attach = json.dumps(attach_json)
+    app.logger.info("Received attach parameters: %s", attach)
     obj = Hupi()
     r = obj.Pay(generate_order_id(), "wechat", price, "隽戈智能",attach)
     response_data = r.json()  # 假设 r 包含了 JSON 数据
