@@ -14,5 +14,5 @@ fi
 
 # Restart the myaccount:app and monitor the nohup.out log
 echo "Starting myaccount:app..."
-nohup gunicorn myaccount:app -w 4 -b 0.0.0.0:5000 & tail -f nohup.out &
+nohup gunicorn myaccount:app -w 1 -b 0.0.0.0:5000 & tail -f nohup.out &
 
