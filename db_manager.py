@@ -157,7 +157,7 @@ class DatabaseManager(metaclass=Singleton):
             # 创建更新语句
             update_nickname = ("UPDATE user_balance "
                                "SET nickname = %s "
-                               "WHERE openid = %s")
+                               "WHERE openid = %s AND (nickname IS NULL OR nickname = '')")
 
             # 执行更新
             cursor.execute(update_nickname, (nickname, openid))
