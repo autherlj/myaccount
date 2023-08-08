@@ -51,15 +51,22 @@ def handle_wechat_redirect():
         response = requests.get(userinfo_url, params=params)
         response_json = response.json()
         nickname = response_json.get('nickname').encode('latin1').decode('utf-8')
+        if nickname:  # if nickname is not empty
+            # assume DatabaseManager and update_user_balance_nickname method are already defined
+            try:
+                DatabaseManager().update_user_balance_nickname(openid, nickname)
+            except Exception as e:
+                app.logger.error(f"Database operation failed: {str(e)}")
+                raise e
         headimgurl = response_json.get('headimgurl')
     except requests.RequestException as e:
-        print(f"Error occurred during request: {e}")
+        app.logger.error(f"Error occurred during request: {e}")
         # Handle the exception as you see fit here.
     except (UnicodeEncodeError, UnicodeDecodeError) as e:
-        print(f"Error occurred during encoding/decoding: {e}")
+        app.logger.error(f"Error occurred during encoding/decoding: {e}")
         # Handle the exception as you see fit here.
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        app.logger.error(f"An unexpected error occurred: {e}")
         # Handle the exception as you see fit here.
 
     if not access_token or not openid:

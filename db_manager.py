@@ -146,3 +146,29 @@ class DatabaseManager(metaclass=Singleton):
             # 关闭游标和连接
             cursor.close()
             cnx.close()
+
+    def update_user_balance_nickname(self, openid, nickname):
+        # 从连接池获取连接
+        cnx = self.cnxpool.get_connection()
+
+        cursor = cnx.cursor()
+
+        try:
+            # 创建更新语句
+            update_nickname = ("UPDATE user_balance "
+                               "SET nickname = %s "
+                               "WHERE openid = %s")
+
+            # 执行更新
+            cursor.execute(update_nickname, (nickname, openid))
+            # 提交事务
+            cnx.commit()
+        except Exception as e:
+            # 如果在执行插入或更新操作时发生错误，回滚事务
+            cnx.rollback()
+            logger.error(f"Database operation failed: {str(e)}")
+            raise e  # re-throw the exception to let the caller handle the error
+        finally:
+            # 关闭游标和连接
+            cursor.close()
+            cnx.close()
