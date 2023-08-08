@@ -57,8 +57,8 @@ def handle_wechat_redirect():
                 DatabaseManager().update_user_balance_nickname(openid, nickname)
             except Exception as e:
                 app.logger.error(f"Database operation failed: {str(e)}")
-                raise e
         headimgurl = response_json.get('headimgurl')
+
     except requests.RequestException as e:
         app.logger.error(f"Error occurred during request: {e}")
         # Handle the exception as you see fit here.
